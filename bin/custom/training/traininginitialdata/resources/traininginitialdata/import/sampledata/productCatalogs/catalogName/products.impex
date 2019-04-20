@@ -1,23 +1,70 @@
-# -----------------------------------------------------------------------
-# [y] hybris Platform
-#
-# Copyright (c) 2018 SAP SE or an SAP affiliate company.  All rights reserved.
-#
-# This software is the confidential and proprietary information of SAP
-# ("Confidential Information"). You shall not disclose such Confidential
-# Information and shall use it only in accordance with the terms of the
-# license agreement you entered into with SAP.
-# -----------------------------------------------------------------------
-# ImpEx for Importing Products
-
 # Macros / Replacement Parameter definitions
-$productCatalog=__PRODUCT_CATALOG_NAME__
-$productCatalogName=__PRODUCT_CATALOG_FULL_NAME__
-
+$productCatalog=apparelProductCatalog
+$productCatalogName=Apparel Product Catalog
 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
-$supercategories=supercategories(code, $catalogVersion)
-$baseProduct=baseProduct(code,$catalogVersion)
-$approved=approvalstatus(code)[default='check']
+$baseProduct=baseProduct(code, catalogVersion(catalog(id[default='$productCatalog']),version[default='Staged']))
+$approved=approvalstatus(code)[default='approved']
+$taxGroup=Europe1PriceFactory_PTG(code)[default=eu-vat-full]
 
-# Insert Products
-INSERT_UPDATE Product;code[unique=true];$supercategories;manufacturerName;manufacturerAID;unit(code);ean;variantType(code);$catalogVersion;$approved
+# Apparel products use Variants with a structure:
+# ApparelProduct > ApparelStyleVariantProduct > ApparelSizeVariantProduct
+# Apparel products may have no variations, only colour (style) variations or both colour and size variations.
+
+# Create products
+INSERT_UPDATE ApparelProduct;code[unique=true];$catalogVersion;unit(code);supercategories(code,$catalogVersion);varianttype(code);$approved;$taxGroup;ean;genders(code);internalOnly[default=false]
+                            ;300441142;;pieces;Blue Tomato,caps;;;;1022436212;MALE;true
+                            ;29531;;pieces;Toko,skigear;;;;989514105;FEMALE;
+                            ;29532;;pieces;Toko,skigear;;;;953539556;MALE;
+                            ;29533;;pieces;Toko,skigear;;;;836246217;FEMALE;
+                            ;30404;;pieces;Von Zipper,sunglasses;;;;299052695;FEMALE;
+                            ;300047513;;pieces;Von Zipper,sunglasses;;;;383203982;MALE;
+                            ;45572;;pieces;Toko,skigear;;;;886280602;FEMALE;
+                            ;45573;;pieces;Toko,skigear;;;;586341472;MALE;
+                            ;45574;;pieces;Toko,skigear;;;;815087779;MALE;
+                            ;45576;;pieces;Toko,skigear;;;;111644105;MALE;
+                            ;45577;;pieces;Toko,skigear;;;;548206858;FEMALE;
+                            ;300046592;;pieces;Fox,sunglasses;;;;1019425517;MALE;
+                            ;300005449;;pieces;adidas eyewear,goggles;;;;627880620;MALE;
+                            ;300013358;;pieces;Red,tools;;;;919294226;MALE;
+                            ;300015407;;pieces;Von Zipper,sunglasses;;;;1033044592;FEMALE;
+                            ;300020294;;pieces;Spy,goggles;;;;406756884;FEMALE;
+                            ;300022348;;pieces;Toko,skigear;;;;577158351;MALE;
+                            ;300022349;;pieces;Toko,skigear;;;;509408267;MALE;
+                            ;300022352;;pieces;Toko,skigear;;;;449207984;FEMALE;
+                            ;300022356;;pieces;Toko,skigear;;;;632871132;MALE;
+                            ;300024964;;pieces;Fox,sunglasses;;;;780746040;MALE;
+                            ;300040462;;pieces;Roxy,sunglasses;;;;893541837;MALE;
+                            ;300044323;;pieces;Red,tools;;;;1032600241;FEMALE;
+                            ;300044596;;pieces;Toko,skigear;;;;364794161;MALE;
+                            ;300044599;;pieces;Toko,skigear;;;;619638137;FEMALE;
+                            ;300044600;;pieces;Toko,skigear;;;;894972010;MALE;
+                            ;300044601;;pieces;Toko,skigear;;;;665812657;MALE;
+                            ;300044617;;pieces;Anon,sunglasses;;;;225522251;MALE;
+                            ;300044623;;pieces;Anon,sunglasses;;;;651338417;MALE;
+                            ;300044624;;pieces;Anon,sunglasses;;;;475330206;MALE;
+                            ;300045375;;pieces;Quiksilver,sunglasses;;;;657195251;MALE;
+                            ;300046522;;pieces;Periplus AC+Ion Guides,guides;;;;646720493;MALE;
+                            ;300046587;;pieces;Fox,sunglasses;;;;476861583;FEMALE;
+                            ;300051511;;pieces;Rip Curl,caps;;;;661773209;MALE;
+                            ;300047195;;pieces;Roxy,sunglasses;;;;209936540;FEMALE;
+                            ;300047196;;pieces;Roxy,sunglasses;;;;684262402;MALE;
+                            ;300047199;;pieces;Roxy,sunglasses;;;;346696791;FEMALE;
+                            ;300047436;;pieces;Roxy,sunglasses;;;;167296285;MALE;
+                            ;300310070;;pieces;Dakine,backpack;;;;889164390;MALE;
+                            ;300310086;;pieces;Dakine,backpack;;;;986739944;MALE;
+                            ;300310163;;pieces;Dakine,backpack;;;;754612929;MALE;
+                            ;300310180;;pieces;Dakine,others;;;;1046940957;FEMALE;
+                            ;300310300;;pieces;Dakine,others;;;;542440755;MALE;
+                            ;M18729_B;;pieces;Vans,shoes;ApparelStyleVariantProduct;;;;FEMALE;
+                            ;M25687;;pieces;Playboard,shirts;ApparelStyleVariantProduct;;;;FEMALE;
+                            ;M27160_B;;pieces;Dainese,shirts;ApparelStyleVariantProduct;;;;MALE;
+                            ;M28323_B;;pieces;Vans,shoes;ApparelStyleVariantProduct;;;;FEMALE;
+                            ;M28324_B;;pieces;Vans,shoes;ApparelStyleVariantProduct;;;;MALE;
+                            ;M32946_B;;pieces;Dainese,shirts;ApparelStyleVariantProduct;;;;MALE;
+                            ;M33307_B;;pieces;F2-FTWO,shoes;ApparelStyleVariantProduct;;;;FEMALE;
+                            ;M33477_B;;pieces;TSG,helmet;ApparelStyleVariantProduct;;;;MALE;
+                            ;M34130_B;;pieces;Pro Tec,skigear;ApparelStyleVariantProduct;;;;MALE;
+                            ;M34704;;pieces;Playboard,shirts;ApparelStyleVariantProduct;;;;FEMALE;
+                            ;M34705_B;;pieces;Playboard,shirts;ApparelStyleVariantProduct;;;;MALE;
+                            ;M35364;;pieces;Playboard,shirts;ApparelStyleVariantProduct;;;;FEMALE;
+                            ;M35392_B;;pieces;Vans,shoes;ApparelStyleVariantProduct;;;;FEMALE;

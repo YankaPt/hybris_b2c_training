@@ -12,7 +12,11 @@
 	<spring:url value="${product.url}/configuratorPage/{/configuratorType}" var="configureProductUrl" htmlEscape="false">
 		<spring:param name="configuratorType" value="${configuratorType}" />
 	</spring:url>
-
+    <!-- make product unavailable if user external and product internal only -->
+    <c:if test="${product.internalOnly and !user.internal}">
+        <c:set var="buttonType">button</c:set>
+        <spring:theme code="text.addToCart.unavailable" var="addToCartText"/>
+    </c:if>
 	<form:form id="addToCartForm${fn:escapeXml(product.code)}" action="${addToCartUrl}" method="post" class="add_to_cart_form">
 
         <ycommerce:testId code="addToCartButton">
@@ -32,6 +36,10 @@
                     </button>
                 </c:otherwise>
             </c:choose>
+            <button type="${buttonType}" class="addToCartButton <c:if test="
+            ${product.stock.stockLevelStatus.code eq 'outOfStock' }">out-of-stock</c:if>"
+                    <c:if test="${(product.stock.stockLevelStatus.code eq 'outOfStock') || fn:contains(buttonType, 'button') }"> disabled="disabled" aria-disabled="true"</c:if>
+            >${addToCartText}</button>
         </ycommerce:testId>
     </form:form>
 
