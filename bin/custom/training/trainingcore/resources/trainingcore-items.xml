@@ -47,6 +47,10 @@
                       jaloclass="de.hybris.training.core.jalo.ApparelProduct">
                 <description>Base apparel product extension that contains additional attributes.</description>
                 <attributes>
+                    <attribute qualifier="internalOnly" type="java.lang.Boolean">
+                        <description>Defines if the product should be sold to hybris employees only.</description>
+                        <persistence type="property" />
+                    </attribute>
                     <attribute qualifier="genders" type="GenderList">
                         <description>List of genders that the ApparelProduct is designed for</description>
                         <modifiers/>
@@ -106,6 +110,16 @@
                         <description>Color of the product.</description>
                         <modifiers/>
                         <persistence type="property"/>
+                    </attribute>
+                </attributes>
+            </itemtype>
+            <itemtype code="Customer" generate="false" autocreate="false">
+                <attributes>
+                    <attribute qualifier="isInternal" type="java.lang.Boolean">
+                        <description>Defines if the customer is a hybris internal employee. Aggregated information</description>
+                        <persistence type="dynamic" attributeHandler="dynamicHybrisCustomerAttributeBean" />
+                        <modifiers read="true" write="true" optional="true"
+                                   unique="false" />
                     </attribute>
                 </attributes>
             </itemtype>
